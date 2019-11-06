@@ -8,17 +8,46 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="style1.css" />
 	</head>
 	<body>
-        <!--Three Tables: One for each car part:-->
+		<div id="buildScreen">
+			<!--Three Tables: One for each car part:-->
+			<table>
+				<tbody id="carParts">
+				</tbody>
+			</table>
 
+			<!--Canvas that shows car-->
+			<canvas id="buildCanvas" width="960" height="320">
+				Sorry, canvas is not supported on your browser.
+			</canvas>
 
-        <!--Canvas that shows car-->
-		<canvas id="myCanvas" width="300" height="300">
-			Sorry, canvas is not supported on your browser.
-        </canvas>
+			<!--Row of buttons to show rooms-->
+			
+		</div>
+		<div id="raceScreen">
+			<canvas id="raceCanvas" width="960" height="320">
+					Sorry, canvas is not supported on your browser.
+			</canvas>
+		</div>
+		<!--
+			db.carParts.insertOne({name: "Diamond", type: "tire", cost:"500"});
+			db.carParts.insertOne({name: "Fancy", type: "tire", cost:"400"});
+			db.carParts.insertOne({name: "Hover", type: "tire", cost:"300"});
+			db.carParts.insertOne({name: "Square", type: "tire", cost:"100"});
+			db.carParts.insertOne({name: "Tread", type: "tire", cost:"200"});
 
-        <!--Row of buttons to show rooms-->
+			db.carParts.insertOne({name: "Buggy", type: "vehicle", cost:"100"});
+			db.carParts.insertOne({name: "Van", type: "vehicle", cost:"200"});
+			db.carParts.insertOne({name: "Tank", type: "vehicle", cost:"300"});
+			db.carParts.insertOne({name: "Race", type: "vehicle", cost:"400"});
+			db.carParts.insertOne({name: "Drag", type: "vehicle", cost:"500"});
 
-        
+			db.carParts.insertOne({name: "One", type: "engine", cost:"100"});
+			db.carParts.insertOne({name: "Two", type: "engine", cost:"200"});
+			db.carParts.insertOne({name: "Three", type: "engine", cost:"300"});
+			db.carParts.insertOne({name: "Four", type: "engine", cost:"400"});
+			db.carParts.insertOne({name: "Five", type: "engine", cost:"500"});
+
+		-->
     </body>
     <script src="vue.js"></script>
     <script src="scripts/jquery-3.4.1.js"></script> 

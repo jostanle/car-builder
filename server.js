@@ -1,9 +1,18 @@
-var express = require("express"); //load up another module we will need (express)
-var bodyParser = require("body-parser");
-var app = express(); //Instantiating a server
-app.use(bodyParser.urlencoded({extended: true}));
+//Stuff for MongoDB
+var mongodb = require("mongodb");
+var MongoClient = mongodb.MongoClient;
+var ObjectID = mongodb.ObjectID;
+var client = new MongoClient("mongodb://localhost:27017", { useNewUrlParser: true, useUnifiedTopology: true });
+var db;
 
-app.use(express.static('pub')); //to serve up .txt, .html, .jpg, etc. files.
+//Stuff for express, server, and socket.io
+var express = require("express");
+var app = express();
+var http = require("http");
+var server = http.Server(app);
+var socketio = require("socket.io");
+var io = socketio(server);
+app.use(express.static("pub"));
 
 //Server-side data:
 

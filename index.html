@@ -9,7 +9,10 @@
 	</head>
 	<body>
         <!--Three Tables: One for each car part:-->
-
+		<table>
+			<tbody id="carParts">
+			</tbody>
+		</table>
 
         <!--Canvas that shows car-->
 		<canvas id="myCanvas" width="300" height="300">
@@ -18,7 +21,26 @@
 
         <!--Row of buttons to show rooms-->
 
-        
+		<!--
+			db.carParts.insertOne({name: "Diamond", type: "tire", cost:"500"});
+			db.carParts.insertOne({name: "Fancy", type: "tire", cost:"400"});
+			db.carParts.insertOne({name: "Hover", type: "tire", cost:"300"});
+			db.carParts.insertOne({name: "Square", type: "tire", cost:"100"});
+			db.carParts.insertOne({name: "Tread", type: "tire", cost:"200"});
+
+			db.carParts.insertOne({name: "Buggy", type: "frame", cost:"100"});
+			db.carParts.insertOne({name: "Van", type: "frame", cost:"200"});
+			db.carParts.insertOne({name: "Tank", type: "frame", cost:"300"});
+			db.carParts.insertOne({name: "Race", type: "frame", cost:"400"});
+			db.carParts.insertOne({name: "Drag", type: "frame", cost:"500"});
+
+			db.carParts.insertOne({name: "One", type: "engine", cost:"100"});
+			db.carParts.insertOne({name: "Two", type: "engine", cost:"200"});
+			db.carParts.insertOne({name: "Three", type: "engine", cost:"300"});
+			db.carParts.insertOne({name: "Four", type: "engine", cost:"400"});
+			db.carParts.insertOne({name: "Five", type: "engine", cost:"500"});
+
+		-->
     </body>
     <script src="vue.js"></script>
     <script src="scripts/jquery-3.4.1.js"></script> 

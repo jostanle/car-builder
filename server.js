@@ -15,9 +15,15 @@ var io = socketio(server);
 app.use(express.static("pub"));
 
 //Server-side data:
-
+var listOfUsers = [];
 
 //Server-side functions:
+
+    //If client has valid cost(can race)
+
+    //Calculate car performances
+
+    //Run Race
 
 app.listen(80, function() {
     //This function is only executed once the server is ready.

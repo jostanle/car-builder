@@ -1,3 +1,7 @@
+var socket = io();
+
+socket.emit("getBooks");
+
 var vm = new Vue({
     el: "#app",
     data: {

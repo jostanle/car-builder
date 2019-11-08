@@ -74,7 +74,3 @@ client.connect(function(err) {
     }
 }); 
 
-app.listen(80, function() {
-    //This function is only executed once the server is ready.
-    console.log("Server is waiting on port 80");
-});

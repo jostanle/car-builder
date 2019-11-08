@@ -1,6 +1,6 @@
 var socket = io();
 
-socket.emit("getBooks");
+socket.emit("getParts");
 
 socket.on("setPartsList", function(bookList) {
     $("#partsList").html("");

@@ -3,6 +3,8 @@
     // 1. Run server
     // 2. Select Break Point in code and Attach by process ID
     // 3. Lauch Debug console and can see Variables or step over/step in 
+    // Web Debugger: Have to have command console open
+    //    Put in line debugger; , put in breakpoint then refresh page
    "version": "0.2.0",
     "configurations": [
         {

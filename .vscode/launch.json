@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // 1. Run server
+    // 2. Select Break Point in code and Attach by process ID
+    // 3. Lauch Debug console and can see Variables or step over/step in 
+   "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach by Process ID",
+            "processId": "${command:PickProcess}"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}\\pub\\client.js"
+        }
+    ]
+}

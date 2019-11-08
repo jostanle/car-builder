@@ -11,7 +11,7 @@
 		<div id="buildScreen">
 			<!--Three Tables: One for each car part:-->
 			<table>
-				<tbody id="carParts">
+				<tbody id="partsList">
 				</tbody>
 			</table>
 
@@ -21,7 +21,7 @@
 			</canvas>
 
 			<!--Row of buttons to show rooms-->
-			
+
 		</div>
 		<div id="raceScreen">
 			<canvas id="raceCanvas" width="960" height="320">
@@ -38,8 +38,8 @@
 			db.carParts.insertOne({name: "Buggy", type: "vehicle", cost:"100"});
 			db.carParts.insertOne({name: "Van", type: "vehicle", cost:"200"});
 			db.carParts.insertOne({name: "Tank", type: "vehicle", cost:"300"});
-			db.carParts.insertOne({name: "Race", type: "vehicle", cost:"400"});
-			db.carParts.insertOne({name: "Drag", type: "vehicle", cost:"500"});
+			db.carParts.insertOne({name: "RaceCar", type: "vehicle", cost:"400"});
+			db.carParts.insertOne({name: "DragCar", type: "vehicle", cost:"500"});
 
 			db.carParts.insertOne({name: "One", type: "engine", cost:"100"});
 			db.carParts.insertOne({name: "Two", type: "engine", cost:"200"});

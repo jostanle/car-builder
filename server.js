@@ -27,15 +27,15 @@ var listOfUsers = [];
 
 //Access database
 function sendParts(theSocket) {
-	db.collection("carParts").find({}, {sort: [['cost', -1],['vehicle', 1]]}).toArray(function(error, documents) {
+	db.collection("carParts").find({}, {sort: [['type', 1],['cost', -1]]}).toArray(function(error, documents) {
 		if (error != null) {
 			console.log(error);
 		}
 		else if(theSocket == null) {
-			io.emit("setBookList", documents); //broadcast to all clients
+			io.emit("setPartsList", documents); //broadcast to all clients
 		}
 		else {
-			theSocket.emit("setBookList", documents);
+			theSocket.emit("setPartsList", documents);
 		}
 	});
 }
@@ -49,6 +49,29 @@ function updateClientIfNoError(error, result) {
 	}
 }
 
+function validateInput(objectToValidate, schema) {
+	
+	for(prop in objectToValidate) {
+		//nonemptyString
+		if (schema[prop] === "nonemptyString") {
+			if (!(typeof objectToValidate[prop] === "string" && objectToValidate[prop].length > 0)) {
+				return false;
+			}
+		}
+		//positiveInteger
+		else if (schema[prop] === "positiveInteger") {
+			if (typeof objectToValidate[prop] !== "number") return false;
+			if (Math.floor(objectToValidate[prop]) != objectToValidate[prop]) return false; //not an integer
+			if (objectToValidate[prop] <= 0) return false;
+		}
+		else {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 io.on("connection", function(socket) {
 	console.log("Client connected.");
 
@@ -59,7 +82,10 @@ io.on("connection", function(socket) {
 	socket.on("getParts", function() {
 		sendParts(socket);
     });
-    
+    socket.on("selectPart", function(bookIdToDelete) {
+		db.collection("carParts").find({_id: new ObjectID(partIdToSelect.id)}, updateClientIfNoError);
+		console.log("Part Selected");
+	});
 });
 
 client.connect(function(err) {

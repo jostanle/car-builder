@@ -8,25 +8,33 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="style1.css" />
 	</head>
 	<body>
-		<div id="buildScreen">
-			<!--Three Tables: One for each car part:-->
-			<table>
-				<tbody id="partsList">
-				</tbody>
-			</table>
+		<div id="app">
+			<div id="buildScreen">
+				<!--Three Tables: One for each car part:-->
+				<table>
+					<tbody id="carParts">
+						<tr v-for="part of partsList" v-bind:key="part._id">
+							<td>{{part.name}}</td>
+							<td>{{part.type}}</td>
+							<td>{{part.cost}}</td>
+							<td><button v-on:click="selectAPart(part._id)">Select</button></td>
+						</tr>
+					</tbody>
+				</table>
 
-			<!--Canvas that shows car-->
-			<canvas id="buildCanvas" width="960" height="320">
-				Sorry, canvas is not supported on your browser.
-			</canvas>
-
-			<!--Row of buttons to show rooms-->
-
-		</div>
-		<div id="raceScreen">
-			<canvas id="raceCanvas" width="960" height="320">
+				<!--Canvas that shows car-->
+				<canvas id="buildCanvas" width="960" height="320">
 					Sorry, canvas is not supported on your browser.
-			</canvas>
+				</canvas>
+
+				<!--Row of buttons to show rooms-->
+
+			</div>
+			<div id="raceScreen">
+				<canvas id="raceCanvas" width="960" height="320">
+						Sorry, canvas is not supported on your browser.
+				</canvas>
+			</div>
 		</div>
 		<!--
 			db.carParts.insertOne({name: "Diamond", type: "tire", cost:"500"});

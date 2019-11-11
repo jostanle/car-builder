@@ -82,9 +82,10 @@ io.on("connection", function(socket) {
 	socket.on("getParts", function() {
 		sendParts(socket);
     });
-    socket.on("selectPart", function(bookIdToDelete) {
+    socket.on("selectPart", function(partIdToSelect) {
 		db.collection("carParts").find({_id: new ObjectID(partIdToSelect.id)}, updateClientIfNoError);
 		console.log("Part Selected");
+		//Send part to client
 	});
 });
 

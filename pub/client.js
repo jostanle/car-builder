@@ -13,8 +13,8 @@ var vm = new Vue({
         setParts: function(partsList) {
             this.partsList = partsList;
         },
-        selectAPart: function(thePartIdToSelect) {
-            socket.emit("selectPart", {id: thePartIdToSelect});
+        selectAPart: function(PartIdToSelect) {
+            socket.emit("selectPart", {id: PartIdToSelect});
         },
 
     },

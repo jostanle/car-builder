@@ -11,31 +11,37 @@
 		<div id="app">
 			<div id="buildScreen">
 				<!--Three Tables: One for each car part:-->
-				<table>
-					<tbody id="carParts">
-						<tr v-for="part of partsList" v-bind:key="part._id">
-							<td>{{part.name}}</td>
-							<td>{{part.type}}</td>
-							<td>{{part.cost}}</td>
-							<td><button v-on:click="selectAPart(part._id)">Select</button></td>
-						</tr>
-					</tbody>
-				</table>
-
+				<span id="partMenu">
+					<table >
+						<tbody id="carParts">
+							<tr v-for="part of partsList" v-bind:key="part._id">
+								<td>{{part.name}}</td>
+								<td>{{part.type}}</td>
+								<td>{{part.cost}}</td>
+								<td><button v-on:click="selectAPart(part._id)">Select</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</span>
 				<!--Canvas that shows car-->
-				<canvas id="buildCanvas" width="960" height="320">
-					Sorry, canvas is not supported on your browser.
-				</canvas>
-
+				<span class="canvasSpan">
+					<canvas id="buildCanvas" width="960" height="320">
+						Sorry, canvas is not supported on your browser.
+					</canvas>
+				</span>
 				<!--Row of buttons to show rooms-->
-
+				<span>
+				</span>
 			</div>
+
+			<!--Race Screen-->
 			<div id="raceScreen">
 				<canvas id="raceCanvas" width="960" height="320">
 						Sorry, canvas is not supported on your browser.
 				</canvas>
 			</div>
 		</div>
+		<!--Backgroudn Image: https://depositphotos.com/1099638/stock-photo-tar-texture.html-->
 		<!--
 			db.carParts.insertOne({name: "Diamond", type: "tire", cost:"500"});
 			db.carParts.insertOne({name: "Fancy", type: "tire", cost:"400"});

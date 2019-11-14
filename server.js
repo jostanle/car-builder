@@ -49,28 +49,6 @@ function updateClientIfNoError(error, result) {
 	}
 }
 
-function validateInput(objectToValidate, schema) {
-	
-	for(prop in objectToValidate) {
-		//nonemptyString
-		if (schema[prop] === "nonemptyString") {
-			if (!(typeof objectToValidate[prop] === "string" && objectToValidate[prop].length > 0)) {
-				return false;
-			}
-		}
-		//positiveInteger
-		else if (schema[prop] === "positiveInteger") {
-			if (typeof objectToValidate[prop] !== "number") return false;
-			if (Math.floor(objectToValidate[prop]) != objectToValidate[prop]) return false; //not an integer
-			if (objectToValidate[prop] <= 0) return false;
-		}
-		else {
-			return false;
-		}
-	}
-
-	return true;
-}
 
 io.on("connection", function(socket) {
 	console.log("Client connected.");
@@ -83,9 +61,14 @@ io.on("connection", function(socket) {
 		sendParts(socket);
     });
     socket.on("selectPart", function(partIdToSelect) {
-		db.collection("carParts").find({_id: new ObjectID(partIdToSelect.id)}, updateClientIfNoError);
-		console.log("Part Selected");
-		//Send part to client
+		db.collection("carParts").find({_id: new ObjectID(partIdToSelect.id)}).toArray(function(error,documents){
+			if (error != null) {
+				console.log(error);
+			}
+			else {
+				socket.emit("partSelected", documents);
+			}
+		});
 	});
 });
 

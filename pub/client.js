@@ -14,7 +14,9 @@ var vm = new Vue({
             this.partsList = partsList;
         },
         selectAPart: function(PartIdToSelect) {
-            socket.emit("selectPart", {id: PartIdToSelect});
+            console.log(PartIdToSelect);
+
+            socket.emit("selectPart", {_id: PartIdToSelect});
         },
 
     },
@@ -24,4 +26,13 @@ var vm = new Vue({
 socket.emit("getParts");
 socket.on("setPartsList", function(partsList) {
     vm.setParts(partsList);
+});
+
+socket.on("partSelected", function(partSelected) {
+    //TODO: Make partSelected Array actually fill, have function change data
+    vm.nameField = partSelected.name;
+    vm.typeField = partSelected.type;
+    vm.costField = partSelected.cost;
+    
+    console.log(partSelected);
 });

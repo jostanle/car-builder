@@ -61,12 +61,12 @@ io.on("connection", function(socket) {
 		sendParts(socket);
     });
     socket.on("selectPart", function(partIdToSelect) {
-		db.collection("carParts").find({_id: new ObjectID(partIdToSelect.id)}).toArray(function(error,documents){
+		db.collection("carParts").find({_id: new ObjectID(partIdToSelect._id)}).toArray(function(error,documents){
 			if (error != null) {
 				console.log(error);
 			}
 			else {
-				socket.emit("partSelected", documents);
+				socket.emit("partChosen", documents);
 			}
 		});
 	});

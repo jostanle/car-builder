@@ -59,7 +59,8 @@ io.on("connection", function(socket) {
 
 	socket.on("getParts", function() {
 		sendParts(socket);
-    });
+	});
+	/*
     socket.on("selectPart", function(partIdToSelect) {
 		db.collection("carParts").find({_id: new ObjectID(partIdToSelect._id)}).toArray(function(error,documents){
 			if (error != null) {
@@ -70,6 +71,7 @@ io.on("connection", function(socket) {
 			}
 		});
 	});
+	*/
 });
 
 client.connect(function(err) {

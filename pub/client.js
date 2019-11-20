@@ -23,23 +23,19 @@ function loadAllTheImages(arrayOfImages, callbackFunction) {
     return ret;
 }
 
-if (isCanvasSupported()) {
-    var btx = document.getElementById("buildCanvas").getContext("2d");
-}
 
-//TODO: Add rest of images
-var theImages = loadAllTheImages(["images/BuggyVehicle.png"], function() {
-    btx.drawImage(theImages[0], 0, 0, 320, 160);
-
-});
 
 var vm = new Vue({
     el: "#app",
     data: {
         partsList: [],
-        nameField: "",
-        typeField: "",
-        costField: "",
+        EngineName: "",
+        EngineCost: 0,
+        VehicleName: "",
+        VehicleCost: 0,
+        TireName: "",
+        TireCost: 0,
+        TotalCost: Total,
         errors: []
     },
     methods: {
@@ -48,32 +44,51 @@ var vm = new Vue({
         },
         selectAPart: function(PartIdToSelect) {
             console.log(PartIdToSelect);
-
-            socket.emit("selectPart", {_id: PartIdToSelect});
-
-
+            var actualPart = null;
+            for(part of partsList) {
+                if (part._id == PartIdToSelect)  {
+                    actualPart = part;
+                }
+            }
+            if (actualPart.type == "vehicle"){
+                VehicleName = actualPart.name;
+                VehicleCost = actualPart.cost;
+            }
+            else if (actualPart.type == "tire"){
+                TireName = actualPart.name;
+                TireCost = actualPart.cost;
+            }
+            else if (actualPart.type == "engine"){
+                EngineName = actualPart.name;
+                EngineCost = actualPart.cost;
+            }
+            //socket.emit("selectPart", {_id: PartIdToSelect});
         },
 
     },
-    computed: {}
+    computed: {
+        Total: function(){
+            return EngineCost+VehicleCost+TireCost;
+        }
+
+    }
 });
+
+
+if (isCanvasSupported()) {
+    var btx = document.getElementById("buildCanvas").getContext("2d");
+
+    //TODO: Add rest of images
+    var theImages = loadAllTheImages(["images/BuggyVehicle.png"], function() {
+        //btx.drawImage(theImages[0], 0, 0, 320, 160);
+
+    });
+}
+
+
 
 socket.emit("getParts");
 socket.on("setPartsList", function(partsList) {
     vm.setParts(partsList);
 });
 
-socket.on("partChosen", function(partSelected) {
-
-    vm.nameField = partSelected.name;
-    vm.typeField = partSelected.type;
-    vm.costField = partSelected.cost;
-
-    var frame = new Image();
-    frame.src = "images/"+vm.nameField+"Vehicle.png";
-    frame.addEventListener("load", function() {
-        btx.drawImage(frame, 0, 0, 320, );
-    });
-    
-    console.log(partSelected);
-});

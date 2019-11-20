@@ -23,8 +23,6 @@ function loadAllTheImages(arrayOfImages, callbackFunction) {
     return ret;
 }
 
-
-
 var vm = new Vue({
     el: "#app",
     data: {
@@ -35,7 +33,7 @@ var vm = new Vue({
         VehicleCost: 0,
         TireName: "",
         TireCost: 0,
-        TotalCost: Total,
+        //TotalCost: Total,
         errors: []
     },
     methods: {
@@ -45,22 +43,22 @@ var vm = new Vue({
         selectAPart: function(PartIdToSelect) {
             console.log(PartIdToSelect);
             var actualPart = null;
-            for(part of partsList) {
+            for(part of this.partsList) {
                 if (part._id == PartIdToSelect)  {
                     actualPart = part;
                 }
             }
             if (actualPart.type == "vehicle"){
-                VehicleName = actualPart.name;
-                VehicleCost = actualPart.cost;
+                this.VehicleName = actualPart.name;
+                this.VehicleCost = actualPart.cost;
             }
             else if (actualPart.type == "tire"){
-                TireName = actualPart.name;
-                TireCost = actualPart.cost;
+                this.TireName = actualPart.name;
+                this.TireCost = actualPart.cost;
             }
             else if (actualPart.type == "engine"){
-                EngineName = actualPart.name;
-                EngineCost = actualPart.cost;
+                this.EngineName = actualPart.name;
+                this.EngineCost = actualPart.cost;
             }
             //socket.emit("selectPart", {_id: PartIdToSelect});
         },
@@ -68,7 +66,7 @@ var vm = new Vue({
     },
     computed: {
         Total: function(){
-            return EngineCost+VehicleCost+TireCost;
+            return this.EngineCost+this.VehicleCost+this.TireCost;
         }
 
     }

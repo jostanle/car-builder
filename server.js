@@ -15,12 +15,11 @@ var io = socketio(server);
 app.use(express.static("pub"));
 
 //Server-side data:
-var listOfUsers = [];
+var Room1Users = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar:true}, {ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCost: true}];
 
 //Server-side functions:
-
     //If client has valid cost(can race)
-
+	
     //Calculate car performances
 
     //Run Race

@@ -33,7 +33,6 @@ var vm = new Vue({
         VehicleCost: 0,
         TireName: "",
         TireCost: 0,
-        //TotalCost: Total,
         errors: []
     },
     methods: {
@@ -65,9 +64,9 @@ var vm = new Vue({
 
     },
     computed: {
-        Total: function(){
-            return this.EngineCost+this.VehicleCost+this.TireCost;
-        }
+        //Total: function(){
+        //    return this.EngineCost+this.VehicleCost+this.TireCost;
+        //}
 
     }
 });

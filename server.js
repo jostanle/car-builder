@@ -37,7 +37,7 @@ function canRace(User){
 		db.collection("carParts").find({name: Room1[User].ChosenEngine}).toArray(function(error,piceng){
 			ecost= piceng.cost;
 		});
-		var total = tcost + vcost + tcost;
+		var TotalCost = tcost + vcost + tcost;
 		if(TotalCost > 800 && TotalCost < 0)
 			Room1[User].ValidCar= false;
 		else 

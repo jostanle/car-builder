@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<div id="app">
-			<div id="buildScreen">
+			<div id="buildScreen" key="build">
 				<!--Three Tables: One for each car part:-->
 				<span id="partMenu">
 					<table >
@@ -35,13 +35,15 @@
 						Sorry, canvas is not supported on your browser.
 					</canvas>
 				</span>
-				<!--Button to enter room-->
+				<!--Button to Ready up, only clickable if validcost-->
+				
 				<span>
+					<button v-if="validcost" v-on:click="userReady">Ready up!</button>
 				</span>
 			</div>
 
 			<!--Race Screen-->
-			<div id="raceScreen">
+			<div id="raceScreen" key="race">
 				<canvas id="raceCanvas" width="960" height="320">
 						Sorry, canvas is not supported on your browser.
 				</canvas>

@@ -32,11 +32,11 @@ var vm = new Vue({
     el: "#app",
     data: {
         partsList: [],
-        EngineName: "",
+        EngineName: "Two",
         EngineCost: 0,
-        VehicleName: "",
+        VehicleName: "Buggy",
         VehicleCost: 0,
-        TireName: "",
+        TireName: "Fancy",
         TireCost: 0,
         errors: []
     },
@@ -65,6 +65,7 @@ var vm = new Vue({
                 this.EngineName = actualPart.name;
                 this.EngineCost = actualPart.cost;
             }
+            self.can
             //socket.emit("selectPart", {_id: PartIdToSelect});
         },
 
@@ -73,54 +74,52 @@ var vm = new Vue({
         //Total: function(){
         //    return this.EngineCost+this.VehicleCost+this.TireCost;
         //}
-        /*
+       /*
         vehicleDisplay: function(){
             var btx = document.getElementById("buildCanvas").getContext("2d");
 
             //TODO: Add rest of images
             var theImages = loadAllTheImages(imag, function() {
-               for(i of typ){
-                   console.log(vm.VehicleName);
-                   if(i == this.VehicleName){
-                        btx.drawImage(theImages[i], 0, 0, 320, 160);
-                    }
-                    if(i == this.EngineName){
-                        btx.drawImage(theImages[i], 225, 0, 75, 75);
-                    }
-                    if(i == this.TireName){
-                        btx.drawImage(theImages[i], 0, 0, 320, 160);
-                    }
-               }
-            });
-        
-        }
-        */
-
-    }
+                for(i of typ){
+                    console.log(vm.VehicleName);
+                    if(i == vm.VehicleName ){
+                         btx.drawImage(theImages[index], 0, 0, 320, 160);
+                     }
+                     if(i == vm.EngineName){
+                         
+                         btx.drawImage(theImages[index], 225, 0, 75, 75);
+                     }
+                     if(i == vm.TireName){
+                         btx.drawImage(theImages[index], 0, 0, 320, 160);
+                     
+                     }
+                     index ++;
+                }
+            */
+            
+            }
 });
-
-var imag = ["images/BuggyVehicle.png","images/RaceCarVehicle.png","images/TankVehicle.png","images/VanVehicle.png","images/DragCarVehicle.png",
-            "images/OneEngine.png","images/TwoEngine.png","images/ThreeEngine.png","images/FourEngine.png","images/FiveEngine.png",
-            "images/DiamondTire.png", "images/FancyTire.png", "images/HoverTire.png", "images/SquareTire.png", "images/TreadTire.png"];
-var type = ["Buggy","RaceCar","Tank", "Van", "DragCar", "One","Two","Three","Four","Five","Diamond", "Fancy","Hover","Square","Tread"];
-
 
 if (isCanvasSupported()) {
     var btx = document.getElementById("buildCanvas").getContext("2d");
+    var index = 0;
 
     //TODO: Add rest of images
     var theImages = loadAllTheImages(imag, function() {
        for(i of typ){
            console.log(vm.VehicleName);
-           if(i == vm.VehicleName){
-                btx.drawImage(theImages[i], 0, 0, 320, 160);
+           if(i == vm.VehicleName ){
+                btx.drawImage(theImages[index], 0, 0, 320, 160);
             }
             if(i == vm.EngineName){
-                btx.drawImage(theImages[i], 225, 0, 75, 75);
+                
+                btx.drawImage(theImages[index], 225, 0, 75, 75);
             }
             if(i == vm.TireName){
-                btx.drawImage(theImages[i], 0, 0, 320, 160);
+                btx.drawImage(theImages[index], 0, 0, 320, 160);
+            
             }
+            index ++;
        }
     });
 }

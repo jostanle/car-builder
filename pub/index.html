@@ -30,8 +30,12 @@
 					{{TireName}}</br>
 					<!--<p id="cost"> {{TotalCost}} </p>-->
 				</p>
+				<br>
+				<button id = "show" button v-on:click="vehicleDisplay">Display Vehicle</button>
+				<br>
 				<span class="canvasSpan">
 					<canvas id="buildCanvas" width="320" height="160">
+						{{vehicleDisplay}};
 						Sorry, canvas is not supported on your browser.
 					</canvas>
 				</span>

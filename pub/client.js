@@ -32,11 +32,11 @@ var vm = new Vue({
     el: "#app",
     data: {
         partsList: [],
-        EngineName: "Two",
+        EngineName: "",
         EngineCost: 0,
-        VehicleName: "Buggy",
+        VehicleName: "",
         VehicleCost: 0,
-        TireName: "Fancy",
+        TireName: "",
         TireCost: 0,
         errors: []
     },
@@ -65,41 +65,52 @@ var vm = new Vue({
                 this.EngineName = actualPart.name;
                 this.EngineCost = actualPart.cost;
             }
-            self.can
-            //socket.emit("selectPart", {_id: PartIdToSelect});
         },
+        vehicleDisplay: function(){
+            var btx = document.getElementById("buildCanvas").getContext("2d");
+            btx.clearRect(0, 0, 320, 160);
+
+                var index = 0;
+            
+                //TODO: Add rest of images
+                var theImages = loadAllTheImages(imag, function() {
+                   for(i of typ){
+
+                       if(i == vm.VehicleName ){
+                           btx.drawImage(theImages[index], 0, 0, 320, 160);
+                        }
+                        if(vm.VehicleName == "Tank"){
+                            if(i == vm.EngineName){
+                                 btx.drawImage(theImages[index], 50, 0, 75, 75);
+                            }
+                        }
+                        else if(i == vm.EngineName){
+                            btx.drawImage(theImages[index], 225, 0, 75, 75);
+                           
+                        }
+                        if(i == vm.TireName){
+                           btx.drawImage(theImages[index], 0, 0, 320, 160);
+                        }
+                        index ++;
+                   
+                    } 
+                
+            });
+        }
+            //socket.emit("selectPart", {_id: PartIdToSelect});
+        
 
     },
     computed: {
         //Total: function(){
         //    return this.EngineCost+this.VehicleCost+this.TireCost;
         //}
-       /*
-        vehicleDisplay: function(){
-            var btx = document.getElementById("buildCanvas").getContext("2d");
-
-            //TODO: Add rest of images
-            var theImages = loadAllTheImages(imag, function() {
-                for(i of typ){
-                    console.log(vm.VehicleName);
-                    if(i == vm.VehicleName ){
-                         btx.drawImage(theImages[index], 0, 0, 320, 160);
-                     }
-                     if(i == vm.EngineName){
-                         
-                         btx.drawImage(theImages[index], 225, 0, 75, 75);
-                     }
-                     if(i == vm.TireName){
-                         btx.drawImage(theImages[index], 0, 0, 320, 160);
-                     
-                     }
-                     index ++;
-                }
-            */
-            
-            }
+       
+        
+    }
 });
 
+/*
 if (isCanvasSupported()) {
     var btx = document.getElementById("buildCanvas").getContext("2d");
     var index = 0;
@@ -123,7 +134,7 @@ if (isCanvasSupported()) {
        }
     });
 }
-
+*/
 socket.emit("getParts");
 socket.on("setPartsList", function(partsList) {
     vm.setParts(partsList);

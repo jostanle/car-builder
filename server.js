@@ -15,8 +15,9 @@ var io = socketio(server);
 app.use(express.static("pub"));
 
 //Server-side data:
-var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar:true}, {ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCost: true}];
+var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar:true}, {ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar: true}];
 var Cars = [{Speed:0, Max:0, Accel: 0},{Speed:0, Max:0, Accel: 0}];
+var nextUser = 0;
 
 //Server-side functions:
     //Pass User number, Get returned if valid
@@ -70,7 +71,7 @@ function runRace(){
 		}
 		if (Car1pos >= 950 && Car2pos >= 950){
 			over = true;
-			var winner = Math.max(Car1pos,Car2pos); //If having scoring, add this to winnders score and heavily reducec(/4, etc) to loser
+			var winner = Math.max(Car1pos,Car2pos); //If having scoring, add this to winnders score and heavily reduced(/4, etc) to loser
 			if (Car1pos == winner){
 				return 1;
 				console.log("Car 1 won the race!"); //If more rooms, add room as parameter and say which room here
@@ -110,6 +111,9 @@ function updateClientIfNoError(error, result) {
 
 io.on("connection", function(socket) {
 	console.log("Client connected.");
+	
+	socket.emit("setUserNumber", nextUser%2);
+	nextUser++;
 
 	socket.on("disconnect", function() {
 		console.log("Client disconnected.");
@@ -117,7 +121,14 @@ io.on("connection", function(socket) {
 
 	socket.on("getParts", function() {
 		sendParts(socket);
-    });
+	});
+
+	socket.on("updateCar", function(User) {
+		canRace(User);
+		console.log(User +" is " + Room1[User].ValidCar);
+		socket.emit("updateValidation", Room1[User].ValidCar);
+	});
+
     socket.on("selectPart", function(partIdToSelect) {
 		db.collection("carParts").find({_id: new ObjectID(partIdToSelect._id)}).toArray(function(error,documents){
 			if (error != null) {

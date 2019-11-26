@@ -38,11 +38,15 @@ var vm = new Vue({
         VehicleCost: 0,
         TireName: "",
         TireCost: 0,
+        User: 0,
         errors: []
     },
     methods: {
         setParts: function(partsList) {
             this.partsList = partsList;
+        },
+        setUser: function(UserNumber) {
+            this.User = UserNumber;
         },
         selectAPart: function(PartIdToSelect) {
             console.log(PartIdToSelect);
@@ -65,6 +69,7 @@ var vm = new Vue({
                 this.EngineName = actualPart.name;
                 this.EngineCost = actualPart.cost;
             }
+            socket.emit("updateCar", this.User);
         },
         vehicleDisplay: function(){
             var btx = document.getElementById("buildCanvas").getContext("2d");
@@ -102,9 +107,14 @@ var vm = new Vue({
 
     },
     computed: {
-        //Total: function(){
-        //    return this.EngineCost+this.VehicleCost+this.TireCost;
-        //}
+        validcost: function(){
+            
+            socket.on("updateValidation", function(validation) {
+                console.log(validation);
+                return validation;  
+            });
+            
+        }
        
         
     }
@@ -139,4 +149,6 @@ socket.emit("getParts");
 socket.on("setPartsList", function(partsList) {
     vm.setParts(partsList);
 });
-
+socket.on("setUserNumber", function(setUser) {
+    vm.setUser(setUser);
+});

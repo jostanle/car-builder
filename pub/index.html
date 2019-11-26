@@ -25,6 +25,7 @@
 				</span>
 				<!--Canvas that shows car-->
 				<p id="partDisplay">
+					You are Player {{User}}</br>
 					{{VehicleName}}</br>
 					{{EngineName}}</br>
 					{{TireName}}</br>
@@ -39,8 +40,9 @@
 						Sorry, canvas is not supported on your browser.
 					</canvas>
 				</span>
-				<!--Button to Ready up, only clickable if validcost-->
+
 				
+				<!--Button to Ready up, only clickable if validcost-->
 				<span>
 					<button v-if="validcost" v-on:click="userReady">Ready up!</button>
 				</span>

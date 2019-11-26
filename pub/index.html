@@ -29,7 +29,8 @@
 					{{VehicleName}}</br>
 					{{EngineName}}</br>
 					{{TireName}}</br>
-					<input  v-bind:class="colorclass" readonly v-bind:value="currentTotal"></input></br>
+					<input 
+						:class="validCost" readonly v-bind:value="currentTotal"></input></br>
 				</p>
 				<br>
 				<button id = "show" button v-on:click="vehicleDisplay">Display Vehicle</button>
@@ -44,7 +45,7 @@
 				
 				<!--Button to Ready up, only clickable if validcost-->
 				<span>
-					<button v-if="validcost" v-on:click="userReady">Ready up!</button>
+					<button v-if="validation" v-on:click="userReady">Ready up!</button>
 				</span>
 			</div>
 

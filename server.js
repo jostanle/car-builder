@@ -34,10 +34,11 @@ function canRace(User){
 			console.log("Not valid because out of cost range: " + Room1[User].TotalCost);
 			Room1[User].ValidCar= false;
 		}
-		else 
+		else {
 			console.log("Valid with cost: " + Room1[User].TotalCost+ " and parts: "+ Room1[User].ChosenTire +" "+ Room1[User].ChosenVehicle+" "+ Room1[User].ChosenEngine);
 			Room1[User].ValidCar = true;
 			carStats(User);
+		}
 	}
 }
 

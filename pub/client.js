@@ -80,7 +80,7 @@ var vm = new Vue({
             car.enginecost = this.EngineCost;
             car.User = this.User;
             socket.emit("updateCar", car);
-            this.validcost();
+            this.validationUpdate();
         },
         vehicleDisplay: function(){
             var btx = document.getElementById("buildCanvas").getContext("2d");
@@ -116,12 +116,11 @@ var vm = new Vue({
         userReady: function(){
             this.ready = !this.ready;
         },
-        validcost: function(){
+        validationUpdate: function(){
             
-            socket.on("updateValidation", function(validation) {
-                console.log(validation);
-                this.validation = validation;
-                return validation;  
+            socket.on("updateValidation", function(valid) {
+                this.validation = valid;
+                console.log(this.validation); 
             });
             
         }    
@@ -132,12 +131,9 @@ var vm = new Vue({
         currentTotal: function(){
             return parseFloat(this.EngineCost)+parseFloat(this.TireCost)+parseFloat(this.VehicleCost);
         },
-        
-        colorclass:  function(){
-            if (this.validation == false){
-                return 'nonValid';
-            }
-            else return 'validCost';
+        validCost: function(){
+            var className = this.validation ? 'validCost' : 'nonValid';
+            return className;
         }
         
     }

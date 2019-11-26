@@ -15,7 +15,8 @@ var io = socketio(server);
 app.use(express.static("pub"));
 
 //Server-side data:
-var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar:false}, {ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar: false}];
+var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false}, 
+			{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false}];
 var Cars = [{Speed:0, Max:0, Accel: 0},{Speed:0, Max:0, Accel: 0}];
 var nextUser = 0;
 
@@ -27,39 +28,19 @@ function canRace(User){
 		Room1[User].ValidCar= false;
 	}
 	else {
-		var ecost = 0;
-		var vcost = 0;
-		var tcost = 0;
-	
-		tcost = parseFloat(findCost(User, Room1[User].ChosenTire));
-		
-		vcost = parseFloat(findCost(User, Room1[User].ChosenVehicle));
-			
-		ecost = parseFloat(findCost(User, Room1[User].ChosenEngine));
-
-		console.log(tcost +" "+ vcost +" "+ ecost)
-		Room1[User].TotalCost = tcost + vcost + ecost;
+		Room1[User].TotalCost = Room1[User].tcost + Room1[User].vcost + Room1[User].ecost;
+		console.log(Room1[User].tcost);
 		if(Room1[User].TotalCost > 800 || Room1[User].TotalCost < 0) {
 			console.log("Not valid because out of cost range: " + Room1[User].TotalCost);
 			Room1[User].ValidCar= false;
 		}
 		else 
-		console.log("Valid with cost: " + Room1[User].TotalCost+ " and parts: "+ Room1[User].ChosenTire +" "+ Room1[User].ChosenVehicle+" "+ Room1[User].ChosenEngine);
+			console.log("Valid with cost: " + Room1[User].TotalCost+ " and parts: "+ Room1[User].ChosenTire +" "+ Room1[User].ChosenVehicle+" "+ Room1[User].ChosenEngine);
 			Room1[User].ValidCar = true;
 			carStats(User);
 	}
 }
-	//Return cost of certain Part
-function findCost(User, part){
-	db.collection("carParts").findOne({name: Room1[User].part},function(error,parttc){
-		if (error != null) {
-			console.log(error);
-		}
-		else 
-			console.log(parttc);
-			return parttc;
-	});
-}
+
 	//Calculate car performances
 function carStats(User){
 	Cars[User].Accel = Room1[User].ChosenEngine / 8 + Room1[User].ChosenTire /10;
@@ -141,6 +122,12 @@ io.on("connection", function(socket) {
 		Room1[car.User].ChosenTire = car.tire; 
 		Room1[car.User].ChosenVehicle= car.vehicle;
 		Room1[car.User].ChosenEngine = car.engine;
+
+		Room1[car.User].tcost = parseFloat(car.tirecost); 
+		console.log(car.tirecost);
+		console.log(Room1[car.User].tcost);
+		Room1[car.User].vcost= parseFloat(car.vehiclecost);
+		Room1[car.User].ecost = parseFloat(car.enginecost);
 
 		canRace(car.User);
 		console.log(car.User +" is " + Room1[car.User].ValidCar);

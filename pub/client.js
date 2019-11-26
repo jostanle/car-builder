@@ -75,6 +75,9 @@ var vm = new Vue({
             car.vehicle = this.VehicleName;
             car.tire = this.TireName;
             car.engine = this.EngineName;
+            car.tirecost = this.TireCost;         
+            car.vehiclecost = this.VehicleCost;
+            car.enginecost = this.EngineCost;
             car.User = this.User;
             socket.emit("updateCar", car);
             this.validcost();

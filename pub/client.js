@@ -131,8 +131,14 @@ var vm = new Vue({
     computed: {
         currentTotal: function(){
             return parseFloat(this.EngineCost)+parseFloat(this.TireCost)+parseFloat(this.VehicleCost);
+        },
+        
+        colorclass:  function(){
+            if (this.validation == false){
+                return 'nonValid';
+            }
+            else return 'validCost';
         }
-       
         
     }
 });

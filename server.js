@@ -30,24 +30,35 @@ function canRace(User){
 		var ecost = 0;
 		var vcost = 0;
 		var tcost = 0;
-		db.collection("carParts").find({name: Room1[User].ChosenTire}).toArray(function(error,pitire){
-			tcost = pitire.cost;
-		});
-		db.collection("carParts").find({name: Room1[User].ChosenVehicle}).toArray(function(error,piveh){
-			vcost = piveh.cost;
-		});
-		db.collection("carParts").find({name: Room1[User].ChosenEngine}).toArray(function(error,piceng){
-			ecost= piceng.cost;
-		});
-		var TotalCost = tcost + vcost + tcost;
-		if(TotalCost > 800 || TotalCost < 0) {
-			console.log("Not valid because out of cost range: " + TotalCost);
+	
+		tcost = parseFloat(findCost(User, Room1[User].ChosenTire));
+		
+		vcost = parseFloat(findCost(User, Room1[User].ChosenVehicle));
+			
+		ecost = parseFloat(findCost(User, Room1[User].ChosenEngine));
+
+		console.log(tcost +" "+ vcost +" "+ ecost)
+		Room1[User].TotalCost = tcost + vcost + ecost;
+		if(Room1[User].TotalCost > 800 || Room1[User].TotalCost < 0) {
+			console.log("Not valid because out of cost range: " + Room1[User].TotalCost);
 			Room1[User].ValidCar= false;
 		}
 		else 
+		console.log("Valid with cost: " + Room1[User].TotalCost+ " and parts: "+ Room1[User].ChosenTire +" "+ Room1[User].ChosenVehicle+" "+ Room1[User].ChosenEngine);
 			Room1[User].ValidCar = true;
 			carStats(User);
 	}
+}
+	//Return cost of certain Part
+function findCost(User, part){
+	db.collection("carParts").findOne({name: Room1[User].part},function(error,parttc){
+		if (error != null) {
+			console.log(error);
+		}
+		else 
+			console.log(parttc);
+			return parttc;
+	});
 }
 	//Calculate car performances
 function carStats(User){
@@ -128,23 +139,12 @@ io.on("connection", function(socket) {
 
 	socket.on("updateCar", function(car) {
 		Room1[car.User].ChosenTire = car.tire; 
-		Room1[car.User].ChosenVehicle= car.vehiclse;
+		Room1[car.User].ChosenVehicle= car.vehicle;
 		Room1[car.User].ChosenEngine = car.engine;
 
 		canRace(car.User);
 		console.log(car.User +" is " + Room1[car.User].ValidCar);
 		socket.emit("updateValidation", Room1[car.User].ValidCar);
-	});
-
-    socket.on("selectPart", function(partIdToSelect) {
-		db.collection("carParts").find({_id: new ObjectID(partIdToSelect._id)}).toArray(function(error,documents){
-			if (error != null) {
-				console.log(error);
-			}
-			else {
-				socket.emit("partChosen", documents);
-			}
-		});
 	});
 });
 

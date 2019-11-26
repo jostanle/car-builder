@@ -117,6 +117,7 @@ var vm = new Vue({
             
             socket.on("updateValidation", function(validation) {
                 console.log(validation);
+                this.validation = validation;
                 return validation;  
             });
             
@@ -125,7 +126,9 @@ var vm = new Vue({
 
     },
     computed: {
-        
+        currentTotal: function(){
+            return parseFloat(this.EngineCost)+parseFloat(this.TireCost)+parseFloat(this.VehicleCost);
+        }
        
         
     }

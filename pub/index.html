@@ -29,7 +29,7 @@
 					{{VehicleName}}</br>
 					{{EngineName}}</br>
 					{{TireName}}</br>
-					<!--<p id="cost"> {{TotalCost}} </p>-->
+					<input class="nonValid" v-bind:class="{validCost: validation == 'true'}" readonly v-bind:value="currentTotal"></input></br>
 				</p>
 				<br>
 				<button id = "show" button v-on:click="vehicleDisplay">Display Vehicle</button>

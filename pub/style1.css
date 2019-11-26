@@ -18,3 +18,10 @@ body {
     background-image: url('images/depositphotos_1099638-stock-photo-tar-texture.jpg');
     background-size: cover;
 }
+.nonValid{
+    background-color: red;
+}
+
+.validCost{
+    background-color: green;
+}

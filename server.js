@@ -15,14 +15,15 @@ var io = socketio(server);
 app.use(express.static("pub"));
 
 //Server-side data:
-var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar:true}, {ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar: true}];
+var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar:false}, {ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", TotalCost:0, ValidCar: false}];
 var Cars = [{Speed:0, Max:0, Accel: 0},{Speed:0, Max:0, Accel: 0}];
 var nextUser = 0;
 
 //Server-side functions:
     //Pass User number, Get returned if valid
 function canRace(User){
-	if(Room1[User].ChosenTire==""&& Room1[User].ChosenVehicle==""&& Room1[User].ChosenEngine==""){
+	if(Room1[User].ChosenTire=="" || Room1[User].ChosenVehicle=="" || Room1[User].ChosenEngine==""){
+		console.log("Not valid because part not selected: " + Room1[User].ChosenTire +" "+ Room1[User].ChosenVehicle+" "+ Room1[User].ChosenEngine);
 		Room1[User].ValidCar= false;
 	}
 	else {
@@ -39,8 +40,10 @@ function canRace(User){
 			ecost= piceng.cost;
 		});
 		var TotalCost = tcost + vcost + tcost;
-		if(TotalCost > 800 && TotalCost < 0)
+		if(TotalCost > 800 || TotalCost < 0) {
+			console.log("Not valid because out of cost range: " + TotalCost);
 			Room1[User].ValidCar= false;
+		}
 		else 
 			Room1[User].ValidCar = true;
 			carStats(User);
@@ -48,8 +51,8 @@ function canRace(User){
 }
 	//Calculate car performances
 function carStats(User){
-	Car[User].Accel = Room1[User].ChosenEngine / 8 + Room1[User].ChosenTire /10;
-	Car[User].Max = Room1[User].ChosenVehicle / 2 + Room1[User].ChosenTire /10;
+	Cars[User].Accel = Room1[User].ChosenEngine / 8 + Room1[User].ChosenTire /10;
+	Cars[User].Max = Room1[User].ChosenVehicle / 2 + Room1[User].ChosenTire /10;
 	
 }	
 	//Run Race
@@ -123,10 +126,14 @@ io.on("connection", function(socket) {
 		sendParts(socket);
 	});
 
-	socket.on("updateCar", function(User) {
-		canRace(User);
-		console.log(User +" is " + Room1[User].ValidCar);
-		socket.emit("updateValidation", Room1[User].ValidCar);
+	socket.on("updateCar", function(car) {
+		Room1[car.User].ChosenTire = car.tire; 
+		Room1[car.User].ChosenVehicle= car.vehiclse;
+		Room1[car.User].ChosenEngine = car.engine;
+
+		canRace(car.User);
+		console.log(car.User +" is " + Room1[car.User].ValidCar);
+		socket.emit("updateValidation", Room1[car.User].ValidCar);
 	});
 
     socket.on("selectPart", function(partIdToSelect) {

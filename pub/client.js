@@ -39,6 +39,8 @@ var vm = new Vue({
         TireName: "",
         TireCost: 0,
         User: 0,
+        ready: false,
+        validation: false,
         errors: []
     },
     methods: {
@@ -69,7 +71,13 @@ var vm = new Vue({
                 this.EngineName = actualPart.name;
                 this.EngineCost = actualPart.cost;
             }
-            socket.emit("updateCar", this.User);
+            var car = {};
+            car.vehicle = this.VehicleName;
+            car.tire = this.TireName;
+            car.engine = this.EngineName;
+            car.User = this.User;
+            socket.emit("updateCar", car);
+            this.validcost();
         },
         vehicleDisplay: function(){
             var btx = document.getElementById("buildCanvas").getContext("2d");
@@ -101,12 +109,10 @@ var vm = new Vue({
                     } 
                 
             });
-        }
-            //socket.emit("selectPart", {_id: PartIdToSelect});
-        
-
-    },
-    computed: {
+        },
+        userReady: function(){
+            this.ready = !this.ready;
+        },
         validcost: function(){
             
             socket.on("updateValidation", function(validation) {
@@ -114,7 +120,12 @@ var vm = new Vue({
                 return validation;  
             });
             
-        }
+        }    
+        
+
+    },
+    computed: {
+        
        
         
     }

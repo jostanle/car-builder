@@ -15,8 +15,8 @@ var io = socketio(server);
 app.use(express.static("pub"));
 
 //Server-side data:
-var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false}, 
-			{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false}];
+var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false, Message:""}, 
+			{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false, Message:""}];
 var Cars = [{Speed:0, Max:0, Accel: 0},{Speed:0, Max:0, Accel: 0}];
 var nextUser = 0;
 
@@ -24,18 +24,18 @@ var nextUser = 0;
     //Pass User number, Get returned if valid
 function canRace(User){
 	if(Room1[User].ChosenTire=="" || Room1[User].ChosenVehicle=="" || Room1[User].ChosenEngine==""){
-		console.log("Not valid because part not selected: " + Room1[User].ChosenTire +" "+ Room1[User].ChosenVehicle+" "+ Room1[User].ChosenEngine);
+		Room1[User].Message =  "Not valid because part not selected. Current Parts: " + Room1[User].ChosenTire +", "+ Room1[User].ChosenVehicle+", "+ Room1[User].ChosenEngine;
 		Room1[User].ValidCar= false;
 	}
 	else {
 		Room1[User].TotalCost = Room1[User].tcost + Room1[User].vcost + Room1[User].ecost;
 		console.log(Room1[User].tcost);
 		if(Room1[User].TotalCost > 800 || Room1[User].TotalCost < 0) {
-			console.log("Not valid because out of cost range: " + Room1[User].TotalCost);
+			Room1[User].Message = "Not valid because out of cost range: " + Room1[User].TotalCost;
 			Room1[User].ValidCar= false;
 		}
 		else {
-			console.log("Valid with cost: " + Room1[User].TotalCost+ " and parts: "+ Room1[User].ChosenTire +" "+ Room1[User].ChosenVehicle+" "+ Room1[User].ChosenEngine);
+			Room1[User].Message = "Valid with cost: " + Room1[User].TotalCost+ " and parts: "+ Room1[User].ChosenTire +", "+ Room1[User].ChosenVehicle+", "+ Room1[User].ChosenEngine;
 			Room1[User].ValidCar = true;
 			carStats(User);
 		}
@@ -51,30 +51,36 @@ function carStats(User){
 	//Run Race
 function runRace(){
 	var over = false;
+	Car0pos = 0;
 	Car1pos = 0;
-	Car2pos = 0;
+	Car0speed= Cars[0].Accel;
 	Car1speed= Cars[1].Accel;
-	Car2speed= Cars[2].Accel;
 	while(over = false){
+		Car0pos += Car0speed;
 		Car1pos += Car1speed;
-		Car2pos += Car2speed;
 		//Socketemit either absolute position(to hard set) or change in pos(to use translatex) to show progress
+		if(Car0speed < Cars[0].Max) {
+			Car0speed += Cars[0].Accel
+		}
 		if(Car1speed < Cars[1].Max) {
 			Car1speed += Cars[1].Accel
 		}
-		if(Car2speed < Cars[2].Max) {
-			Car2speed += Cars[2].Accel
-		}
-		if (Car1pos >= 950 && Car2pos >= 950){
+		if (Car0pos >= 950 || Car1pos >= 950){
 			over = true;
 			var winner = Math.max(Car1pos,Car2pos); //If having scoring, add this to winnders score and heavily reduced(/4, etc) to loser
-			if (Car1pos == winner){
-				return 1;
-				console.log("Car 1 won the race!"); //If more rooms, add room as parameter and say which room here
+			if (Car0pos == winner){
+				console.log("Car 0 won the race!"); //If more rooms, add room as parameter and say which room here
+				Room1[1].Message ="Car 0 won the race!";
+				Room1[0].Message ="Car 0 won the race!";
+				return 0;
+				
 			}
-			if (Car2pos == winner){
-				return 2;
-				console.log("Car 2 won the race!"); 
+			if (Car1pos == winner){
+				console.log("Car 1 won the race!"); 
+				Room[1].Message = "Car 1 won the race!";
+				Room[0].Message = "Car 1 won the race!";
+				return 1;
+				
 			}
 		}
 	}
@@ -131,7 +137,8 @@ io.on("connection", function(socket) {
 		Room1[car.User].ecost = parseFloat(car.enginecost);
 
 		canRace(car.User);
-		console.log(car.User +" is " + Room1[car.User].ValidCar);
+		socket.emit("sendMessage", Room1[car.User].Message);
+		console.log(car.User + " is " + Room1[car.User].Message);
 		socket.emit("updateValidation", Room1[car.User].ValidCar);
 	});
 });

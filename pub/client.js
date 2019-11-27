@@ -41,6 +41,7 @@ var vm = new Vue({
         User: 0,
         ready: false,
         validation: false,
+        serverMessage: "Welcome!",
         errors: []
     },
     methods: {
@@ -49,6 +50,9 @@ var vm = new Vue({
         },
         setUser: function(UserNumber) {
             this.User = UserNumber;
+        },
+        setMessage: function(serverMessage) {
+            this.serverMessage = serverMessage;
         },
         selectAPart: function(PartIdToSelect) {
             console.log(PartIdToSelect);
@@ -170,4 +174,7 @@ socket.on("setPartsList", function(partsList) {
 });
 socket.on("setUserNumber", function(setUser) {
     vm.setUser(setUser);
+});
+socket.on("sendMessage", function(message) {
+    vm.setMessage(message);
 });

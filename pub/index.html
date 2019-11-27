@@ -32,6 +32,9 @@
 					<input 
 						:class="validCost" readonly v-bind:value="currentTotal"></input></br>
 				</p>
+				<p id="serverMessage">
+					{{serverMessage}}
+				</p>
 				<br>
 				<button id = "show" button v-on:click="vehicleDisplay">Display Vehicle</button>
 				<br>

@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<div id="app">
-			<div id="buildScreen">
+			<div id="buildScreen" key="build">
 				<!--Three Tables: One for each car part:-->
 				<span id="partMenu">
 					<table >
@@ -25,23 +25,35 @@
 				</span>
 				<!--Canvas that shows car-->
 				<p id="partDisplay">
+					You are Player {{User}}</br>
 					{{VehicleName}}</br>
 					{{EngineName}}</br>
 					{{TireName}}</br>
-					<!--<p id="cost"> {{TotalCost}} </p>-->
+					<input 
+						:class="validCost" readonly v-bind:value="currentTotal"></input></br>
 				</p>
+				<p id="serverMessage">
+					{{serverMessage}}
+				</p>
+				<br>
+				<button id = "show" button v-on:click="vehicleDisplay">Display Vehicle</button>
+				<br>
 				<span class="canvasSpan">
 					<canvas id="buildCanvas" width="320" height="160">
+						{{vehicleDisplay}};
 						Sorry, canvas is not supported on your browser.
 					</canvas>
 				</span>
-				<!--Button to enter room-->
+
+				
+				<!--Button to Ready up, only clickable if validcost-->
 				<span>
+					<button v-if="validation" v-on:click="userReady">Ready up!</button>
 				</span>
 			</div>
 
 			<!--Race Screen-->
-			<div id="raceScreen">
+			<div id="raceScreen" key="race">
 				<canvas id="raceCanvas" width="960" height="320">
 						Sorry, canvas is not supported on your browser.
 				</canvas>

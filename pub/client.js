@@ -1,5 +1,10 @@
 var socket = io();
 
+var imag = ["images/BuggyVehicle.png","images/RaceCarVehicle.png","images/TankVehicle.png","images/VanVehicle.png","images/DragCarVehicle.png",
+            "images/OneEngine.png","images/TwoEngine.png","images/ThreeEngine.png","images/FourEngine.png","images/FiveEngine.png",
+            "images/DiamondTire.png", "images/FancyTire.png", "images/HoverTire.png", "images/SquareTire.png", "images/TreadTire.png"];
+var typ = ["Buggy","RaceCar","Tank", "Van", "DragCar", "One","Two","Three","Four","Five","Diamond", "Fancy","Hover","Square","Tread"];
+
 function isCanvasSupported() {
     var tempCanvas = document.createElement("canvas"); 
     return !!(tempCanvas.getContext && tempCanvas.getContext("2d")); 
@@ -33,11 +38,21 @@ var vm = new Vue({
         VehicleCost: 0,
         TireName: "",
         TireCost: 0,
+        User: 0,
+        ready: false,
+        validation: false,
+        serverMessage: "Welcome!",
         errors: []
     },
     methods: {
         setParts: function(partsList) {
             this.partsList = partsList;
+        },
+        setUser: function(UserNumber) {
+            this.User = UserNumber;
+        },
+        setMessage: function(serverMessage) {
+            this.serverMessage = serverMessage;
         },
         selectAPart: function(PartIdToSelect) {
             console.log(PartIdToSelect);
@@ -50,6 +65,7 @@ var vm = new Vue({
             if (actualPart.type == "vehicle"){
                 this.VehicleName = actualPart.name;
                 this.VehicleCost = actualPart.cost;
+               
             }
             else if (actualPart.type == "tire"){
                 this.TireName = actualPart.name;
@@ -59,33 +75,106 @@ var vm = new Vue({
                 this.EngineName = actualPart.name;
                 this.EngineCost = actualPart.cost;
             }
-            //socket.emit("selectPart", {_id: PartIdToSelect});
+            var car = {};
+            car.vehicle = this.VehicleName;
+            car.tire = this.TireName;
+            car.engine = this.EngineName;
+            car.tirecost = this.TireCost;         
+            car.vehiclecost = this.VehicleCost;
+            car.enginecost = this.EngineCost;
+            car.User = this.User;
+            socket.emit("updateCar", car);
+            this.validationUpdate();
         },
+        vehicleDisplay: function(){
+            var btx = document.getElementById("buildCanvas").getContext("2d");
+            btx.clearRect(0, 0, 320, 160);
+
+                var index = 0;
+            
+                //TODO: Add rest of images
+                var theImages = loadAllTheImages(imag, function() {
+                   for(i of typ){
+
+                       if(i == vm.VehicleName ){
+                           btx.drawImage(theImages[index], 0, 0, 320, 160);
+                        }
+                        if(vm.VehicleName == "Tank"){
+                            if(i == vm.EngineName){
+                                 btx.drawImage(theImages[index], 50, 0, 75, 75);
+                            }
+                        }
+                        else if(i == vm.EngineName){
+                            btx.drawImage(theImages[index], 225, 0, 75, 75);
+                           
+                        }
+                        if(i == vm.TireName){
+                           btx.drawImage(theImages[index], 0, 0, 320, 160);
+                        }
+                        index ++;
+                   
+                    } 
+                
+            });
+        },
+        userReady: function(){
+            this.ready = !this.ready;
+        },
+        validationUpdate: function(){
+            
+            socket.on("updateValidation", function(valid) {
+                this.validation = valid;
+                console.log(this.validation); 
+            });
+            
+        }    
+        
 
     },
     computed: {
-        //Total: function(){
-        //    return this.EngineCost+this.VehicleCost+this.TireCost;
-        //}
-
+        currentTotal: function(){
+            return parseFloat(this.EngineCost)+parseFloat(this.TireCost)+parseFloat(this.VehicleCost);
+        },
+        validCost: function(){
+            var className = this.validation ? 'validCost' : 'nonValid';
+            return className;
+        }
+        
     }
 });
 
-
+/*
 if (isCanvasSupported()) {
     var btx = document.getElementById("buildCanvas").getContext("2d");
+    var index = 0;
 
     //TODO: Add rest of images
-    var theImages = loadAllTheImages(["images/BuggyVehicle.png"], function() {
-        //btx.drawImage(theImages[0], 0, 0, 320, 160);
-
+    var theImages = loadAllTheImages(imag, function() {
+       for(i of typ){
+           console.log(vm.VehicleName);
+           if(i == vm.VehicleName ){
+                btx.drawImage(theImages[index], 0, 0, 320, 160);
+            }
+            if(i == vm.EngineName){
+                
+                btx.drawImage(theImages[index], 225, 0, 75, 75);
+            }
+            if(i == vm.TireName){
+                btx.drawImage(theImages[index], 0, 0, 320, 160);
+            
+            }
+            index ++;
+       }
     });
 }
-
-
-
+*/
 socket.emit("getParts");
 socket.on("setPartsList", function(partsList) {
     vm.setParts(partsList);
 });
-
+socket.on("setUserNumber", function(setUser) {
+    vm.setUser(setUser);
+});
+socket.on("sendMessage", function(message) {
+    vm.setMessage(message);
+});

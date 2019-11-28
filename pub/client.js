@@ -123,8 +123,8 @@ var vm = new Vue({
         validationUpdate: function(){
             
             socket.on("updateValidation", function(valid) {
-                this.validation = valid;
-                console.log(this.validation); 
+                vm.validation = valid;
+                console.log(vm.validation); 
             });
             
         }    

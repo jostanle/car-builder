@@ -42,17 +42,34 @@ var vm = new Vue({
         ready: false,
         validation: false,
         serverMessage: "Welcome!",
+        raceMessage: "Race hasn't run yet",
+        p0: "",
+        p1: "",
         errors: []
     },
     methods: {
-        setParts: function(partsList) {
-            this.partsList = partsList;
+        setParts: function(pl) {
+            this.partsList = pl;
         },
-        setUser: function(UserNumber) {
-            this.User = UserNumber;
+        setUser: function(un) {
+            this.User = un;
         },
-        setMessage: function(serverMessage) {
-            this.serverMessage = serverMessage;
+        setMessage: function(sm) {
+            this.serverMessage = sm;
+        },
+        setResults: function(rm) {
+            this.raceMessage = rm;
+        },
+        playerStatus: function(status) {
+            if(status.p0){
+                this.p0 = "Ready";
+            }
+            else this.p0 = "Not Ready";
+
+            if(status.p1){
+                this.p1 = "Ready";
+            }
+            else this.p1 = "Not Ready";
         },
         selectAPart: function(PartIdToSelect) {
             console.log(PartIdToSelect);
@@ -92,7 +109,6 @@ var vm = new Vue({
 
                 var index = 0;
             
-                //TODO: Add rest of images
                 var theImages = loadAllTheImages(imag, function() {
                    for(i of typ){
 
@@ -119,12 +135,17 @@ var vm = new Vue({
         },
         userReady: function(){
             this.ready = !this.ready;
+            var readyUp = {};
+            readyUp.User = this.User;
+            readyUp.ready = this.ready;
+            console.log("Sending to server that "+ readyUp.User+" is "+ readyUp.ready);
+            socket.emit("userReady", readyUp);
         },
         validationUpdate: function(){
             
             socket.on("updateValidation", function(valid) {
-                this.validation = valid;
-                console.log(this.validation); 
+                vm.validation = valid;
+                console.log(vm.validation); 
             });
             
         }    
@@ -143,31 +164,6 @@ var vm = new Vue({
     }
 });
 
-/*
-if (isCanvasSupported()) {
-    var btx = document.getElementById("buildCanvas").getContext("2d");
-    var index = 0;
-
-    //TODO: Add rest of images
-    var theImages = loadAllTheImages(imag, function() {
-       for(i of typ){
-           console.log(vm.VehicleName);
-           if(i == vm.VehicleName ){
-                btx.drawImage(theImages[index], 0, 0, 320, 160);
-            }
-            if(i == vm.EngineName){
-                
-                btx.drawImage(theImages[index], 225, 0, 75, 75);
-            }
-            if(i == vm.TireName){
-                btx.drawImage(theImages[index], 0, 0, 320, 160);
-            
-            }
-            index ++;
-       }
-    });
-}
-*/
 socket.emit("getParts");
 socket.on("setPartsList", function(partsList) {
     vm.setParts(partsList);
@@ -177,4 +173,10 @@ socket.on("setUserNumber", function(setUser) {
 });
 socket.on("sendMessage", function(message) {
     vm.setMessage(message);
+});
+socket.on("sendResults", function(winner) {
+    vm.setResults(winner);
+});
+socket.on("updateStatus", function(status) {
+    vm.playerStatus(status);
 });

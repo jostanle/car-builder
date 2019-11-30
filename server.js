@@ -15,8 +15,9 @@ var io = socketio(server);
 app.use(express.static("pub"));
 
 //Server-side data:
-var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false, Message:""}, 
-			{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false, Message:""}];
+var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false, Message:"", Ready: false}, 
+			{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false, Message:"", Ready: false}];
+var Results1 = "";
 var Cars = [{Speed:0, Max:0, Accel: 0},{Speed:0, Max:0, Accel: 0}];
 var nextUser = 0;
 
@@ -41,23 +42,25 @@ function canRace(User){
 		}
 	}
 }
-
 	//Calculate car performances
 function carStats(User){
-	Cars[User].Accel = Room1[User].ChosenEngine / 8 + Room1[User].ChosenTire /10;
-	Cars[User].Max = Room1[User].ChosenVehicle / 2 + Room1[User].ChosenTire /10;
+	Cars[User].Accel = Room1[User].ecost / 8 + Room1[User].tcost /10;
+	Cars[User].Max = Room1[User].vcost / 2 + Room1[User].tcost /10;
 	
 }	
+
 	//Run Race
 function runRace(){
+	console.log("Race Started!");
 	var over = false;
 	Car0pos = 0;
 	Car1pos = 0;
 	Car0speed= Cars[0].Accel;
 	Car1speed= Cars[1].Accel;
-	while(over = false){
+	while(over == false){
 		Car0pos += Car0speed;
 		Car1pos += Car1speed;
+		console.log("0.  "+ Car0pos + "  /  1.  "+Car1pos);
 		//Socketemit either absolute position(to hard set) or change in pos(to use translatex) to show progress
 		if(Car0speed < Cars[0].Max) {
 			Car0speed += Cars[0].Accel
@@ -67,19 +70,18 @@ function runRace(){
 		}
 		if (Car0pos >= 950 || Car1pos >= 950){
 			over = true;
-			var winner = Math.max(Car1pos,Car2pos); //If having scoring, add this to winnders score and heavily reduced(/4, etc) to loser
+			console.log("Race Finished!");
+			var winner = Math.max(Car0pos,Car1pos); //If having scoring, add this to winnders score and heavily reduced(/4, etc) to loser
 			if (Car0pos == winner){
-				console.log("Car 0 won the race!"); //If more rooms, add room as parameter and say which room here
-				Room1[1].Message ="Car 0 won the race!";
-				Room1[0].Message ="Car 0 won the race!";
-				return 0;
+				Results1 ="Car 0 won the race!";
+				console.log(Results1); //If more rooms, add room as parameter and say which room here
+				return Results1;
 				
 			}
 			if (Car1pos == winner){
-				console.log("Car 1 won the race!"); 
-				Room[1].Message = "Car 1 won the race!";
-				Room[0].Message = "Car 1 won the race!";
-				return 1;
+				Results1 = "Car 1 won the race!";
+				console.log(Results1); 
+				return Results1;
 				
 			}
 		}
@@ -124,6 +126,20 @@ io.on("connection", function(socket) {
 	socket.on("getParts", function() {
 		sendParts(socket);
 	});
+	//Runs whenever a User is now Ready, is both of Room are ready run the Race
+	socket.on("userReady", function(readyUp) {
+		Room1[readyUp.User].Ready = readyUp.ready;
+		var status = {p0: Room1[0].Ready, p1: Room1[1].Ready};
+		io.emit("updateStatus", status);
+		
+		console.log(readyUp.User+ " ready status is now "+ readyUp.ready);
+
+		if(Room1[0].Ready && Room1[1].Ready){
+			console.log("Running Race!");
+			var results = runRace();
+			io.emit("sendResults", Results1);
+		}
+	});
 
 	socket.on("updateCar", function(car) {
 		Room1[car.User].ChosenTire = car.tire; 
@@ -131,8 +147,6 @@ io.on("connection", function(socket) {
 		Room1[car.User].ChosenEngine = car.engine;
 
 		Room1[car.User].tcost = parseFloat(car.tirecost); 
-		console.log(car.tirecost);
-		console.log(Room1[car.User].tcost);
 		Room1[car.User].vcost= parseFloat(car.vehiclecost);
 		Room1[car.User].ecost = parseFloat(car.enginecost);
 

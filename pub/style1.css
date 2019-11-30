@@ -14,6 +14,18 @@ canvas {
     font-size: x-large;
     background: gray;
 }
+#raceScreen{
+    float:center;
+    text-align: center;
+    font-size: x-large;
+    background: white;
+    border: 4px ridge black;
+    font-weight: bold;
+}
+#raceDisplay{
+    background: gray;
+    border: 2px dashed red;
+}
 #serverMessage{
     float:center;
     text-align: center;

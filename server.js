@@ -18,6 +18,7 @@ app.use(express.static("pub"));
 var Room1 = [{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false, Message:"", Ready: false}, 
 			{ChosenTire:"",ChosenVehicle:"",ChosenEngine:"", ecost: 0, vcost: 0, tcost: 0, TotalCost: 0, ValidCar: false, Message:"", Ready: false}];
 var Results1 = "";
+var Race1= "";
 var Cars = [{Speed:0, Max:0, Accel: 0},{Speed:0, Max:0, Accel: 0}];
 var nextUser = 0;
 
@@ -53,6 +54,7 @@ function carStats(User){
 function runRace(){
 	console.log("Race Started!");
 	var over = false;
+	Race1 = "";
 	Car0pos = 0;
 	Car1pos = 0;
 	Car0speed= Cars[0].Accel;
@@ -61,6 +63,7 @@ function runRace(){
 		Car0pos += Car0speed;
 		Car1pos += Car1speed;
 		console.log("0.  "+ Car0pos + "  /  1.  "+Car1pos);
+		Race1 += "\n0.  "+ Car0pos + "  /  1.  "+Car1pos;
 		//Socketemit either absolute position(to hard set) or change in pos(to use translatex) to show progress
 		if(Car0speed < Cars[0].Max) {
 			Car0speed += Cars[0].Accel
@@ -71,17 +74,13 @@ function runRace(){
 		if (Car0pos >= 950 || Car1pos >= 950){
 			over = true;
 			console.log("Race Finished!");
-			var winner = Math.max(Car0pos,Car1pos); //If having scoring, add this to winnders score and heavily reduced(/4, etc) to loser
+			var winner = Math.max(Car0pos,Car1pos); 
 			if (Car0pos == winner){
-				Results1 ="Car 0 won the race!";
-				console.log(Results1); //If more rooms, add room as parameter and say which room here
-				return Results1;
+				return "Car 0 won the race!";
 				
 			}
 			if (Car1pos == winner){
-				Results1 = "Car 1 won the race!";
-				console.log(Results1); 
-				return Results1;
+				return "Car 1 won the race!" ;
 				
 			}
 		}
@@ -136,8 +135,9 @@ io.on("connection", function(socket) {
 
 		if(Room1[0].Ready && Room1[1].Ready){
 			console.log("Running Race!");
-			var results = runRace();
+			Results1 = runRace();
 			io.emit("sendResults", Results1);
+			io.emit("sendRace", Race1);
 		}
 	});
 
@@ -158,7 +158,7 @@ io.on("connection", function(socket) {
 });
 
 client.connect(function(err) {
-    if (err != null) throw err; //No DB connection?  Then let our server crash with an error.
+    if (err != null) throw err; 
     else {
         db = client.db("carParts"); //Get our specific database
 

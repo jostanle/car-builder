@@ -45,7 +45,8 @@ var vm = new Vue({
         raceMessage: "Race hasn't run yet",
         p0: "",
         p1: "",
-        errors: []
+        errors: [],
+        race: "No Race in Progress \n Both Cars must be ready to begin"
     },
     methods: {
         setParts: function(pl) {
@@ -59,6 +60,9 @@ var vm = new Vue({
         },
         setResults: function(rm) {
             this.raceMessage = rm;
+        },
+        setRace: function(rt) {
+            this.race = rt;
         },
         playerStatus: function(status) {
             if(status.p0){
@@ -176,6 +180,9 @@ socket.on("sendMessage", function(message) {
 });
 socket.on("sendResults", function(winner) {
     vm.setResults(winner);
+});
+socket.on("sendRace", function(track) {
+    vm.setRace(track);
 });
 socket.on("updateStatus", function(status) {
     vm.playerStatus(status);
